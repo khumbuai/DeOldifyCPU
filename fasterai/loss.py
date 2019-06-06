@@ -9,7 +9,7 @@ class FeatureLoss(nn.Module):
     def __init__(self, layer_wgts=[20,70,10]):
         super().__init__()
 
-        self.m_feat = models.vgg16_bn(True).features.cuda().eval()
+        self.m_feat = models.vgg16_bn(True).features.eval()
         requires_grad(self.m_feat, False)
         blocks = [i-1 for i,o in enumerate(children(self.m_feat)) if isinstance(o,nn.MaxPool2d)]
         layer_ids = blocks[2:5]
@@ -40,7 +40,7 @@ class FeatureLoss(nn.Module):
 class WassFeatureLoss(nn.Module):
     def __init__(self, layer_wgts=[5,15,2], wass_wgts=[3.0,0.7,0.01]):
         super().__init__()
-        self.m_feat = models.vgg16_bn(True).features.cuda().eval()
+        self.m_feat = models.vgg16_bn(True).features.eval()
         requires_grad(self.m_feat, False)
         blocks = [i-1 for i,o in enumerate(children(self.m_feat)) if isinstance(o,nn.MaxPool2d)]
         layer_ids = blocks[2:5]

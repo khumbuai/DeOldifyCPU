@@ -43,7 +43,7 @@ class BaseFilter(IFilter):
         x.div_(255)
         x,y = self.norm((x,x), do_x=True)
         result = self.learn.pred_batch(ds_type=DatasetType.Valid, 
-            batch=(x[None].cuda(),y[None]), reconstruct=True)
+            batch=(x[None],y[None]), reconstruct=True)
         out = result[0]
         out = self.denorm(out.px, do_x=False)
         out = image2np(out*255).astype(np.uint8)
