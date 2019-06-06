@@ -13,7 +13,9 @@ def gen_inference_wide(root_folder:Path, weights_name:str, nf_factor:int=2, arch
       learn.model.eval()
       return learn
 
-def gen_learner_wide(data:ImageDataBunch, gen_loss=FeatureLoss(), arch=models.resnet101, nf_factor:int=2)->Learner:
+def gen_learner_wide(data:ImageDataBunch, gen_loss=None, arch=models.resnet101, nf_factor:int=2)->Learner:
+    if gen_loss is None:
+        gen_loss = FeatureLoss()
     return unet_learner_wide(data, arch=arch, wd=1e-3, blur=True, norm_type=NormType.Spectral,
                         self_attention=True, y_range=(-3.,3.), loss_func=gen_loss, nf_factor=nf_factor)
 
@@ -41,16 +43,18 @@ def gen_inference_deep(root_folder:Path, weights_name:str, arch=models.resnet34,
       data = get_dummy_databunch()
       learn = gen_learner_deep(data=data, gen_loss=F.l1_loss, arch=arch, nf_factor=nf_factor)
       learn.path = root_folder
-      learn.load(weights_name)
+      learn.load(weights_name, purge=False)
       learn.model.eval()
       return learn
 
-def gen_learner_deep(data:ImageDataBunch, gen_loss=FeatureLoss(), arch=models.resnet34, nf_factor:float=1.5)->Learner:
+def gen_learner_deep(data:ImageDataBunch, gen_loss=None, arch=models.resnet34, nf_factor:float=1.5)->Learner:
+    if gen_loss is None:
+        gen_loss = FeatureLoss()
     return unet_learner_deep(data, arch, wd=1e-3, blur=True, norm_type=NormType.Spectral,
                         self_attention=True, y_range=(-3.,3.), loss_func=gen_loss, nf_factor=nf_factor)
 
 #The code below is meant to be merged into fastaiv1 ideally
-def unet_learner_deep(data:DataBunch, arch:Callable, pretrained:bool=True, blur_final:bool=True,
+def unet_learner_deep(data:DataBunch, arch:Callable, pretrained:bool=False, blur_final:bool=True,
                  norm_type:Optional[NormType]=NormType, split_on:Optional[SplitFuncOrIdxList]=None, 
                  blur:bool=False, self_attention:bool=False, y_range:Optional[Tuple[float,float]]=None, last_cross:bool=True,
                  bottle:bool=False, nf_factor:float=1.5, **kwargs:Any)->Learner:

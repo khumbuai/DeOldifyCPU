@@ -1,13 +1,7 @@
-from numpy import ndarray
-from abc import ABC, abstractmethod
-from .critics import colorize_crit_learner
-from fastai.core import *
+from abc import ABC
 from fastai.vision import *
 from fastai.vision.image import *
 from fastai.vision.data import *
-from fastai import *
-import math
-from scipy import misc
 import cv2
 from PIL import Image as PilImage
 

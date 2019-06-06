@@ -1,5 +1,3 @@
-from fastai import *
-from fastai.core import *
 from fastai.torch_core import *
 from fastai.callbacks  import hook_outputs
 import torchvision.models as models
